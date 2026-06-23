@@ -6,10 +6,12 @@ import {
   getUsersController,
   updateUserByIdController,
 } from "./user.contoller.js";
+import { validate } from "../../middlewares/validate.js";
+import { createUserSchema, updateUserSchema } from "./schema.js";
 
 export const userRouter = Router();
 
 userRouter.get("/", getUsersController);
-userRouter.post("/", createUserController);
+userRouter.post("/", validate(createUserSchema), createUserController);
 userRouter.get("/:id", getUserByIdController);
-userRouter.patch("/:id", updateUserByIdController);
+userRouter.patch("/:id", validate(updateUserSchema), updateUserByIdController);

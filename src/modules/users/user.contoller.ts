@@ -12,13 +12,7 @@ import {
   UpdateUserDto,
   User,
 } from "./user.types.js";
-import { isPostrgesErr } from "../../utils/isPostgresError.js";
 import { errorMessages } from "../../errors/errors.js";
-// Request<Params, ResBody, ReqBody>
-// Ты чаще всего будешь использовать:
-// Params → URL (/users/:id)
-// ResBody → редко
-// ReqBody → POST данные
 
 export const getUsersController = async (
   req: Request<{}, {}, CreateUserBody>,
@@ -34,9 +28,6 @@ export const createUserController = async (
 ) => {
   const { name, email } = req.body;
 
-  if (!name || !email) {
-    return res.status(400).json({ message: errorMessages.requiered_fields });
-  }
   const user = await createUserService({ name, email });
   return res.status(201).json(user);
 };
@@ -60,7 +51,7 @@ export const getUserByIdController = async (
 };
 
 export const updateUserByIdController = async (
-  req: Request<{ id: number }, {}, UpdateUserDto>,
+  req: Request<{ id: string }, {}, UpdateUserDto>,
   res: Response,
 ) => {
   const id = Number(req.params.id);
