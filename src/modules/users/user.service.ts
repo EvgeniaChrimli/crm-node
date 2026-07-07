@@ -8,7 +8,7 @@ import {
 import {
   CreateUserDto,
   IdDto,
-  PaginationDto,
+  UsersQueryDto,
   UpdateUserDto,
   User,
 } from "./user.types.js";
@@ -16,8 +16,10 @@ import {
 export const fetchUsers = async ({
   limit,
   page,
-}: PaginationDto): Promise<User[]> => {
-  return await getUsers({ limit, page });
+  name,
+  email,
+}: UsersQueryDto): Promise<User[]> => {
+  return await getUsers({ limit, page, name, email });
 };
 
 export const createUserService = async ({

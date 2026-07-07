@@ -10,9 +10,11 @@ export const updateUserSchema = z.object({
   email: z.email().optional(),
 });
 
-export const paginationSchema = z.object({
+export const getUsersQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(10),
+  name: z.string().min(1).optional(),
+  email: z.string().min(1).optional(),
 });
 
 export const idSchema = z.object({

@@ -9,14 +9,14 @@ import {
 import { validate } from "../../middlewares/validate.js";
 import {
   createUserSchema,
+  getUsersQuerySchema,
   idSchema,
-  paginationSchema,
   updateUserSchema,
 } from "./schema.js";
 
 export const userRouter = Router();
 
-userRouter.get("/", validate(paginationSchema, "query"), getUsersController);
+userRouter.get("/", validate(getUsersQuerySchema, "query"), getUsersController);
 userRouter.post("/", validate(createUserSchema, "body"), createUserController);
 userRouter.get("/:id", getUserByIdController);
 userRouter.patch(

@@ -2,8 +2,7 @@
 import { db } from "../../config/db.js";
 import {
   CreateUserDto,
-  IdDto,
-  PaginationDto,
+  UsersQueryDto,
   UpdateUserDto,
   User,
 } from "./user.types.js";
@@ -11,13 +10,34 @@ import {
 export const getUsers = async ({
   page,
   limit,
-}: PaginationDto): Promise<User[]> => {
+  name,
+  email,
+}: UsersQueryDto): Promise<User[]> => {
+  const conditions: string[] = [];
+
   const offset = (page - 1) * limit;
-  const text = `
+
+  const values: Array<string | number> = [limit, offset];
+  if (name) {
+    values.push(`%${name}%`);
+    conditions.push(`name ILIKE $${values.length}`);
+  }
+  if (email) {
+    values.push(`%${email}%`);
+    conditions.push(`email ILIKE $${values.length}`);
+  }
+  let text = `
   SELECT * FROM users
-  LIMIT $1
-  OFFSET $2`;
-  const values = [limit, offset];
+  `;
+
+  if (conditions.length > 0) {
+    text += " WHERE " + conditions.join(" AND ");
+  }
+  text += `
+LIMIT $1
+OFFSET $2
+`;
+
   const result = await db.query<User>(text, values);
   return result.rows;
 };

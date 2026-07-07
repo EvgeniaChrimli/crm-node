@@ -9,7 +9,7 @@ import { Request, Response } from "express";
 import {
   CreateUserDto,
   IdDto,
-  PaginationDto,
+  UsersQueryDto,
   UpdateUserDto,
   User,
 } from "./user.types.js";
@@ -19,9 +19,9 @@ export const getUsersController = async (
   req: Request<{}, {}>,
   res: Response,
 ) => {
-  const { limit, page } = req.validated?.query as PaginationDto;
+  const { limit, page, name, email } = req.validated?.query as UsersQueryDto;
 
-  const users = await fetchUsers({ limit, page });
+  const users = await fetchUsers({ limit, page, name, email });
   return res.json(users);
 };
 

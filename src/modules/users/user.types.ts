@@ -1,7 +1,7 @@
 import z from "zod";
 import {
   createUserSchema,
-  paginationSchema,
+  getUsersQuerySchema,
   updateUserSchema,
 } from "./schema.js";
 
@@ -16,9 +16,14 @@ export type CreateUserBody = z.infer<typeof createUserSchema>;
 
 export type CreateUserDto = z.infer<typeof createUserSchema>;
 
+export type GetUsersDto = UsersQueryDto & {
+  name?: string;
+  email?: string;
+};
+
 export type UpdateUserDto = z.infer<typeof updateUserSchema>;
 
-export type PaginationDto = z.infer<typeof paginationSchema>;
+export type UsersQueryDto = z.infer<typeof getUsersQuerySchema>;
 
 export type ValidationTarget = "query" | "body" | "params";
 
