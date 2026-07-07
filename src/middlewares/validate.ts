@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 import z from "zod";
+import { ValidationTarget } from "../modules/users/user.types.js";
 
 export const validate =
-  (schema: z.ZodType) => (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.safeParse(req.body);
+  <TSchema extends z.ZodTypeAny>(schema: TSchema, target: ValidationTarget) =>
+  (req: Request, res: Response, next: NextFunction) => {
+    const result = schema.safeParse(req[target]);
 
     if (!result.success) {
       return res.status(400).json({
@@ -13,7 +15,7 @@ export const validate =
         })),
       });
     }
-
-    req.body = result.data;
+    req.validated ??= {};
+    req.validated[target] = result.data;
     next();
   };

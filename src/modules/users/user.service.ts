@@ -1,20 +1,25 @@
 // Шаг 2 — Service (логика)
 import {
   createUser,
-  getAllUsers,
+  getUsers,
   getUserById,
   updateUserById,
 } from "./user.repository.js";
-import { CreateUserDto, UpdateUserDto, User } from "./user.types.js";
+import {
+  CreateUserDto,
+  IdDto,
+  PaginationDto,
+  UpdateUserDto,
+  User,
+} from "./user.types.js";
 
-export const fetchUsers = async (): Promise<User[]> => {
-  return await getAllUsers();
+export const fetchUsers = async ({
+  limit,
+  page,
+}: PaginationDto): Promise<User[]> => {
+  return await getUsers({ limit, page });
 };
 
-// 1. Проверить существует ли email
-// 2. Захешировать пароль
-// 3. Создать пользователя
-// 4. Отправить письмо
 export const createUserService = async ({
   email,
   name,

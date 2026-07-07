@@ -7,18 +7,21 @@ import {
 } from "./user.service.js";
 import { Request, Response } from "express";
 import {
-  CreateUserBody,
   CreateUserDto,
+  IdDto,
+  PaginationDto,
   UpdateUserDto,
   User,
 } from "./user.types.js";
 import { errorMessages } from "../../errors/errors.js";
 
 export const getUsersController = async (
-  req: Request<{}, {}, CreateUserBody>,
+  req: Request<{}, {}>,
   res: Response,
 ) => {
-  const users = await fetchUsers();
+  const { limit, page } = req.validated?.query as PaginationDto;
+
+  const users = await fetchUsers({ limit, page });
   return res.json(users);
 };
 
@@ -26,7 +29,7 @@ export const createUserController = async (
   req: Request<{}, {}, CreateUserDto>,
   res: Response,
 ) => {
-  const { name, email } = req.body;
+  const { name, email } = req.validated?.body as CreateUserDto;
 
   const user = await createUserService({ name, email });
   return res.status(201).json(user);
@@ -36,12 +39,8 @@ export const getUserByIdController = async (
   req: Request<{ id: string }>,
   res: Response,
 ) => {
-  const id = Number(req.params.id);
-
-  if (isNaN(id)) {
-    return res.status(400).json({ message: errorMessages.invalid_data });
-  }
-  const user = await getUserByIdService(Number(id));
+  const { id } = req.validated?.params as IdDto;
+  const user = await getUserByIdService(id);
 
   if (!user) {
     return res.status(404).json({ message: errorMessages.not_found });
@@ -54,8 +53,8 @@ export const updateUserByIdController = async (
   req: Request<{ id: string }, {}, UpdateUserDto>,
   res: Response,
 ) => {
-  const id = Number(req.params.id);
-  const data = req.body;
+  const { id } = req.validated?.params as IdDto;
+  const data = req.validated?.body as UpdateUserDto;
 
   const user = await updateUserByIdService(id, data);
 
