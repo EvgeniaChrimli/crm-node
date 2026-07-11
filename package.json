@@ -5,9 +5,13 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "predev": "npm run migrate:up",
     "dev": "tsx watch src/server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "migrate:create": "node-pg-migrate create",
+    "migrate:up": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +21,8 @@
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "pg": "^8.21.0",
+    "node-pg-migrate": "^8.0.4",
+    "pg": "^8.22.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
