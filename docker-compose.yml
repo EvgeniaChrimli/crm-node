@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16
+    build: ./postgres
     container_name: my_postgres
     restart: always
     environment:
@@ -9,3 +9,11 @@ services:
       POSTGRES_DB: practice
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./postgres/pg_hba.conf:/usr/local/etc/postgres/pg_hba.conf
+      - ./postgres/postgresql.conf:/usr/local/etc/postgres/postgresql.conf
+    command: postgres -c config_file=/usr/local/etc/postgres/postgresql.conf -c hba_file=/usr/local/etc/postgres/pg_hba.conf
+
+volumes:
+  pgdata:
