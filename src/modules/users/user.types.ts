@@ -30,3 +30,6 @@ export type ValidationTarget = "query" | "body" | "params";
 export type IdDto = {
   id: number;
 };
+
+export type SortBy = "name" | "email" | "created_at";
+export type OrderBy = "asc" | "desc";

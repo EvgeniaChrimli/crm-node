@@ -19,9 +19,10 @@ export const getUsersController = async (
   req: Request<{}, {}>,
   res: Response,
 ) => {
-  const { limit, page, name, email } = req.validated?.query as UsersQueryDto;
+  const { limit, page, name, email, order, sortBy } = req.validated
+    ?.query as UsersQueryDto;
 
-  const users = await fetchUsers({ limit, page, name, email });
+  const users = await fetchUsers({ limit, page, name, email, order, sortBy });
   return res.json(users);
 };
 

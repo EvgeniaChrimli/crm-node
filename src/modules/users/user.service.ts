@@ -18,8 +18,10 @@ export const fetchUsers = async ({
   page,
   name,
   email,
+  order,
+  sortBy,
 }: UsersQueryDto): Promise<User[]> => {
-  return await getUsers({ limit, page, name, email });
+  return await getUsers({ limit, page, name, email, order, sortBy });
 };
 
 export const createUserService = async ({

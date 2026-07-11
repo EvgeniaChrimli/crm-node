@@ -12,6 +12,8 @@ export const getUsers = async ({
   limit,
   name,
   email,
+  order,
+  sortBy,
 }: UsersQueryDto): Promise<User[]> => {
   const conditions: string[] = [];
 
@@ -26,6 +28,7 @@ export const getUsers = async ({
     values.push(`%${email}%`);
     conditions.push(`email ILIKE $${values.length}`);
   }
+
   let text = `
   SELECT * FROM users
   `;
@@ -33,6 +36,7 @@ export const getUsers = async ({
   if (conditions.length > 0) {
     text += " WHERE " + conditions.join(" AND ");
   }
+  text += ` ORDER BY ${sortBy} ${order} `;
   text += `
 LIMIT $1
 OFFSET $2
