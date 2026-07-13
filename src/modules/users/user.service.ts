@@ -6,8 +6,7 @@ import {
   updateUserById,
 } from "./user.repository.js";
 import {
-  CreateUserDto,
-  IdDto,
+  CreateUserBody,
   UsersQueryDto,
   UpdateUserDto,
   User,
@@ -27,7 +26,7 @@ export const fetchUsers = async ({
 export const createUserService = async ({
   email,
   name,
-}: CreateUserDto): Promise<User> => {
+}: CreateUserBody): Promise<User> => {
   return createUser({ email, name });
 };
 

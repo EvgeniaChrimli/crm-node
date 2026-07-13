@@ -10,18 +10,18 @@ import { validate } from "../../middlewares/validate.js";
 import {
   createUserSchema,
   getUsersQuerySchema,
-  idSchema,
   updateUserSchema,
 } from "./schema.js";
+import { idSchema } from "../../shared/schemas/common-schemas.js";
 
 export const userRouter = Router();
 
 userRouter.get("/", validate(getUsersQuerySchema, "query"), getUsersController);
 userRouter.post("/", validate(createUserSchema, "body"), createUserController);
-userRouter.get("/:id", getUserByIdController);
+userRouter.get("/:id", validate(idSchema, "params"), getUserByIdController);
 userRouter.patch(
   "/:id",
-  validate(updateUserSchema, "body"),
   validate(idSchema, "params"),
+  validate(updateUserSchema, "body"),
   updateUserByIdController,
 );

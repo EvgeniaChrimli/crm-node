@@ -4,6 +4,7 @@ import cors from "cors";
 import { Pool } from "pg";
 import { userRouter } from "./modules/users/user.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
+import { branchRouter } from "./modules/branches/branch.routes.js";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -21,6 +22,7 @@ app.use(express.json());
 // Шаг 5 —Подключаем в app.ts
 
 app.use("/users", userRouter);
+app.use("/branches", branchRouter);
 
 //ошибки в конце
 app.use(errorMiddleware);

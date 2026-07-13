@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { ApiError } from "../errors/api.error.js";
-import { errorMessages } from "../errors/errors.js";
+import { errorMessages } from "../shared/constants/errors.js";
 import { isPostrgesErr } from "../utils/isPostgresError.js";
 
 export const errorMiddleware = (

@@ -1,22 +1,22 @@
 import { z } from "zod";
 
-export const createUserSchema = z.object({
+export const createBranchSchema = z.object({
   name: z.string().min(2, "Name must contain at least 2 characters"),
-  email: z.email("Invalid email"),
+  phone: z.string().optional(),
 });
 
-export const updateUserSchema = z.object({
+export const updateBranchSchema = z.object({
   name: z.string().min(2).optional(),
-  email: z.email().optional(),
+  phone: z.string().optional(),
 });
 
-export const getUsersQuerySchema = z.object({
+export const getBranchesQuerySchema = z.object({
   page: z.coerce.number().int().min(1).default(1),
   limit: z.coerce.number().int().min(1).max(100).default(10),
 
-  sortBy: z.enum(["name", "email", "created_at"]).default("created_at"),
+  sortBy: z.enum(["name", "created_at"]).default("created_at"),
   order: z.enum(["asc", "desc"]).default("asc"),
 
   name: z.string().min(1).optional(),
-  email: z.string().min(1).optional(),
+  phone: z.string().min(1).optional(),
 });

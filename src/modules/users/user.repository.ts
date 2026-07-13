@@ -1,7 +1,7 @@
 // Шаг 1 — Repository (работа с БД)
 import { db } from "../../config/db.js";
 import {
-  CreateUserDto,
+  CreateUserBody,
   UsersQueryDto,
   UpdateUserDto,
   User,
@@ -38,15 +38,15 @@ export const getUsers = async ({
   }
   text += ` ORDER BY ${sortBy} ${order} `;
   text += `
-LIMIT $1
-OFFSET $2
+     LIMIT $1
+     OFFSET $2
 `;
 
   const result = await db.query<User>(text, values);
   return result.rows;
 };
 
-export const createUser = async ({ email, name }: CreateUserDto) => {
+export const createUser = async ({ email, name }: CreateUserBody) => {
   const text = `
   INSERT INTO users (name, email)
   VALUES($1, $2)

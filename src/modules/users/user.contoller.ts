@@ -6,14 +6,9 @@ import {
   updateUserByIdService,
 } from "./user.service.js";
 import { Request, Response } from "express";
-import {
-  CreateUserDto,
-  IdDto,
-  UsersQueryDto,
-  UpdateUserDto,
-  User,
-} from "./user.types.js";
-import { errorMessages } from "../../errors/errors.js";
+import { CreateUserBody, UsersQueryDto, UpdateUserDto } from "./user.types.js";
+import { errorMessages } from "../../shared/constants/errors.js";
+import { IdDto } from "../../shared/types/common-types.js";
 
 export const getUsersController = async (
   req: Request<{}, {}>,
@@ -27,10 +22,10 @@ export const getUsersController = async (
 };
 
 export const createUserController = async (
-  req: Request<{}, {}, CreateUserDto>,
+  req: Request<{}, {}, CreateUserBody>,
   res: Response,
 ) => {
-  const { name, email } = req.validated?.body as CreateUserDto;
+  const { name, email } = req.validated?.body as CreateUserBody;
 
   const user = await createUserService({ name, email });
   return res.status(201).json(user);
