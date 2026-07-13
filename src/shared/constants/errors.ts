@@ -5,4 +5,5 @@ export const errorMessages = {
   data_error: "Database error",
   invalid_data: "Invalid id",
   not_found: "Not found",
+  branch_not_exist: "Branch does not exist",
 };

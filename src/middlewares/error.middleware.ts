@@ -17,10 +17,22 @@ export const errorMiddleware = (
     });
   }
   if (isPostrgesErr(err)) {
-    if (err.code === "23505") {
-      return res.status(409).json({ message: errorMessages.resource_exist });
+    switch (err.code) {
+      case "23505":
+        return res.status(409).json({
+          message: errorMessages.resource_exist,
+        });
+
+      case "23503":
+        return res.status(400).json({
+          message: errorMessages.branch_not_exist,
+        });
+
+      default:
+        return res.status(400).json({
+          message: errorMessages.data_error,
+        });
     }
-    return res.status(400).json({ message: errorMessages.data_error });
   }
   return res.status(500).json({ message: errorMessages.server_error });
 };

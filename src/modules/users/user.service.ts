@@ -26,8 +26,9 @@ export const fetchUsers = async ({
 export const createUserService = async ({
   email,
   name,
+  branch_id,
 }: CreateUserBody): Promise<User> => {
-  return createUser({ email, name });
+  return createUser({ email, name, branch_id });
 };
 
 export const getUserByIdService = async (id: number) => {

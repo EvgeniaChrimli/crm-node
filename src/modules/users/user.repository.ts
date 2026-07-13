@@ -46,12 +46,16 @@ export const getUsers = async ({
   return result.rows;
 };
 
-export const createUser = async ({ email, name }: CreateUserBody) => {
+export const createUser = async ({
+  email,
+  name,
+  branch_id,
+}: CreateUserBody) => {
   const text = `
-  INSERT INTO users (name, email)
-  VALUES($1, $2)
+  INSERT INTO users (name, email, branch_id)
+  VALUES($1, $2, $3)
   RETURNING *`;
-  const values = [name, email];
+  const values = [name, email, branch_id];
   const result = await db.query<User>(text, values);
   return result.rows[0];
 };
@@ -71,9 +75,10 @@ export const updateUserById = async (
 ): Promise<User | null> => {
   const text = `UPDATE users
     SET name = COALESCE($1, name),
-    email = COALESCE($2, email)
-    WHERE id = $3 RETURNING *`;
-  const values = [data.name, data.email, id];
+    email = COALESCE($2, email),
+    branch_id = COALESCE($3, branch_id)
+    WHERE id = $4 RETURNING *`;
+  const values = [data.name, data.email, id, data.branch_id];
   const result = await db.query<User>(text, values);
   return result.rows[0] || null;
 };
