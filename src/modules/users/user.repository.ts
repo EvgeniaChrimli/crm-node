@@ -1,7 +1,7 @@
 // Шаг 1 — Repository (работа с БД)
 import { db } from "../../config/db.js";
-import { USER_WITH_BRANCH_SELECT } from "./left.join.user.branch.js";
-import { mapUser } from "./user.mapper.js";
+import { mapUser } from "../../shared/user.mapper.js";
+import { USER_WITH_BRANCH_SELECT } from "./selects.js";
 import {
   CreateUserBody,
   UsersQueryDto,
@@ -17,20 +17,22 @@ export const getUsers = async ({
   email,
   order,
   sortBy,
+  branch,
 }: UsersQueryDto): Promise<User[]> => {
   const conditions: string[] = [];
 
   const offset = (page - 1) * limit;
-
   const values: Array<string | number> = [limit, offset];
-  if (name) {
-    values.push(`%${name}%`);
-    conditions.push(`name ILIKE $${values.length}`);
-  }
-  if (email) {
-    values.push(`%${email}%`);
-    conditions.push(`email ILIKE $${values.length}`);
-  }
+
+  const addCondition = (column: string, value?: string) => {
+    if (!value) return;
+    values.push(`%${value}%`);
+    conditions.push(`${column} ILIKE $${values.length}`);
+  };
+
+  addCondition("u.name", name);
+  addCondition("u.email", email);
+  addCondition("b.name", branch);
 
   let text = USER_WITH_BRANCH_SELECT;
   if (conditions.length > 0) {

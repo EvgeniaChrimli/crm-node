@@ -6,6 +6,7 @@ import { userRouter } from "./modules/users/user.routes.js";
 import { errorMiddleware } from "./middlewares/error.middleware.js";
 import { branchRouter } from "./modules/branches/branch.routes.js";
 import { contactRouter } from "./modules/contacts/contacts.router.js";
+import { accessRouter } from "./modules/access/access.router.js";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use("/users", userRouter);
 app.use("/branches", branchRouter);
 app.use("/contacts", contactRouter);
+app.use("/access", accessRouter);
 
 //ошибки в конце
 app.use(errorMiddleware);

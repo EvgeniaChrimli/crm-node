@@ -21,4 +21,6 @@ export const getUsersQuerySchema = z.object({
 
   name: z.string().min(1).optional(),
   email: z.string().min(1).optional(),
+
+  branch: z.string().min(1).optional(),
 });
