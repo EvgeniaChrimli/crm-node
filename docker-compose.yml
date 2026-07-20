@@ -14,6 +14,16 @@ services:
       - ./postgres/pg_hba.conf:/usr/local/etc/postgres/pg_hba.conf
       - ./postgres/postgresql.conf:/usr/local/etc/postgres/postgresql.conf
     command: postgres -c config_file=/usr/local/etc/postgres/postgresql.conf -c hba_file=/usr/local/etc/postgres/pg_hba.conf
-
+  n8n:
+    image: n8nio/n8n:latest
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=${N8N_USER}
+      - N8N_BASIC_AUTH_PASSWORD=${N8N_PASSWORD}
+      - GENERIC_TIMEZONE=Europe/Moscow
+    volumes:
+      - n8n_data:/home/node/.n8n
 volumes:
   pgdata:
