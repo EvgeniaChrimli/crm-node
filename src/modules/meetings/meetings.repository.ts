@@ -76,8 +76,6 @@ export const createMeeting = async ({
   VALUES($1, $2, $3, $4, $5, $6)
   RETURNING id`;
   const values = [user_id, contact_id, title, meeting_at, description, status];
-  //   const result = await db.query<GetMeetingsRow>(text, values);
-  //   return result.rows[0].id;
   const result = await db.query<{ id: number }>(text, values);
 
   return (await getMeetingById(result.rows[0].id))!;
@@ -125,7 +123,7 @@ export const updateMeetingById = async (
     data.contact_id,
     id,
   ];
-  const result = await db.query<GetMeetingsRow>(text, values);
+  const result = await db.query<{ id: number }>(text, values);
   if (!result.rows[0]) return null;
 
   return getMeetingById(result.rows[0].id);
