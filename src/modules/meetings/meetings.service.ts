@@ -1,6 +1,9 @@
 import { ApiError } from "../../errors/api.error.js";
+import { sendMeetingCreated } from "../../integrations/n8n/n8n.service.js";
 import { hasAccess } from "../access/access.repository.js";
 import { getContactById } from "../contacts/contacts.repository.js";
+import { SseEvents } from "../sse/events.js";
+import { sseService } from "../sse/sse.service.js";
 import { getUserById } from "../users/user.repository.js";
 import {
   createMeeting,
@@ -57,7 +60,13 @@ export const createMeetingService = async (
   if (!access) {
     throw new ApiError(403, "User has no access to this contact");
   }
-  return createMeeting(dto);
+
+  const meeting = await createMeeting(dto);
+
+  await sendMeetingCreated(meeting);
+
+  sseService.send(SseEvents.MeetingCreated, meeting);
+  return meeting;
 };
 
 export const getMeetingByIdService = async (id: number) => {
@@ -68,5 +77,11 @@ export const updateMeetingByIdService = async (
   id: number,
   data: UpdateMeetingDto,
 ) => {
-  return updateMeetingById(id, data);
+  const meeting = await updateMeetingById(id, data);
+
+  if (meeting) {
+    sseService.send(SseEvents.MeetingUpdated, meeting);
+  }
+
+  return meeting;
 };
