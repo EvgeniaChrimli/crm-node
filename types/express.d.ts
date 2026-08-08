@@ -7,5 +7,7 @@ declare module "express-serve-static-core" {
       query?: unknown;
       params?: unknown;
     };
+
+    user?: AuthPayload;
   }
 }

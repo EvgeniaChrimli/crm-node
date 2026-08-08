@@ -1,8 +1,9 @@
 import { ApiError } from "../../errors/api.error.js";
 import { errorMessages } from "../../shared/constants/errors.js";
-import { findUserByEmail } from "../users/user.repository.js";
+import { createUser, findUserByEmail } from "../users/user.repository.js";
 import { saveRefreshToken } from "./auth.repository.js";
-import { comparePassword } from "./model/lib/hash.js";
+import { RegisterDto, UserRole } from "./auth.types.js";
+import { comparePassword, hashPassword } from "./model/lib/hash.js";
 import { createAccessToken, createRefreshToken } from "./model/lib/jwt.js";
 
 export const loginService = async (email: string, password: string) => {
@@ -29,6 +30,49 @@ export const loginService = async (email: string, password: string) => {
   await saveRefreshToken(user.id, refreshToken, expiresAt);
 
   return {
+    accessToken,
+    refreshToken,
+  };
+};
+
+export const registerService = async ({
+  name,
+  email,
+  branch_id,
+  password,
+}: RegisterDto) => {
+  const existingUser = await findUserByEmail(email);
+
+  if (existingUser) {
+    throw new ApiError(409, "User with this email already exists");
+  }
+
+  const password_hash = await hashPassword(password);
+
+  const user = await createUser({
+    name,
+    email,
+    branch_id,
+    password_hash,
+    role: UserRole.USER,
+  });
+
+  const accessToken = createAccessToken({
+    userId: user.id,
+    role: user.role,
+  });
+
+  const refreshToken = createRefreshToken({
+    userId: user.id,
+  });
+
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 30);
+
+  await saveRefreshToken(user.id, refreshToken, expiresAt);
+
+  return {
+    user,
     accessToken,
     refreshToken,
   };

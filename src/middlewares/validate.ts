@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import z from "zod";
-import { ValidationTarget } from "../modules/users/user.types.js";
+import { ValidationTarget } from "../shared/types/common-types.js";
 
 export const validate =
   <TSchema extends z.ZodTypeAny>(schema: TSchema, target: ValidationTarget) =>
