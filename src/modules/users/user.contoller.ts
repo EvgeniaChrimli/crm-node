@@ -25,9 +25,16 @@ export const createUserController = async (
   req: Request<{}, {}, CreateUserBody>,
   res: Response,
 ) => {
-  const { name, email, branch_id } = req.validated?.body as CreateUserBody;
+  const { name, email, branch_id, password, role } = req.validated
+    ?.body as CreateUserBody;
 
-  const user = await createUserService({ name, email, branch_id });
+  const user = await createUserService({
+    name,
+    email,
+    branch_id,
+    password,
+    role,
+  });
   return res.status(201).json(user);
 };
 

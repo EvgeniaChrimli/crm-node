@@ -6,4 +6,5 @@ export const errorMessages = {
   invalid_data: "Invalid id",
   not_found: "Not found",
   branch_not_exist: "Branch does not exist",
+  invalid_email_or_password: "Invalid email or password",
 };

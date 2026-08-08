@@ -4,6 +4,7 @@ export const USER_WITH_BRANCH_SELECT = `
   u.name,
   u.email,
   u.created_at,
+  u.role,
   u.branch_id,
 
   b.id AS branch_id_join,

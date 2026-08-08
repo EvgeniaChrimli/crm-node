@@ -1,9 +1,12 @@
 import { z } from "zod";
+import { UserRole } from "../auth/auth.types.js";
 
 export const createUserSchema = z.object({
   name: z.string().min(2, "Name must contain at least 2 characters"),
   email: z.email("Invalid email"),
   branch_id: z.number().int().positive().optional(),
+  password: z.string().min(8),
+  role: z.enum([UserRole.USER, UserRole.ADMIN]).default(UserRole.USER),
 });
 
 export const updateUserSchema = z.object({
@@ -23,4 +26,8 @@ export const getUsersQuerySchema = z.object({
   email: z.string().min(1).optional(),
 
   branch: z.string().min(1).optional(),
+  role: z
+    .enum([UserRole.USER, UserRole.ADMIN])
+    .default(UserRole.USER)
+    .optional(),
 });

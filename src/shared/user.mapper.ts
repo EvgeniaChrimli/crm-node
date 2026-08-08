@@ -1,10 +1,11 @@
-import { GetUsersRow } from "./user.types.js";
+import { GetUsersRow } from "../modules/users/user.types.js";
 
 export const mapUser = (row: GetUsersRow) => ({
   id: row.id,
   name: row.name,
   email: row.email,
   created_at: row.created_at,
+  role: row.role,
 
   branch: row.branch_id
     ? {
@@ -14,6 +15,4 @@ export const mapUser = (row: GetUsersRow) => ({
         created_at: row.created_at,
       }
     : null,
-
-  //добавим еще вариант
 });

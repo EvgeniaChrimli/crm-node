@@ -9,6 +9,7 @@ import { contactRouter } from "./modules/contacts/contacts.router.js";
 import { accessRouter } from "./modules/access/access.router.js";
 import { meetingRoter } from "./modules/meetings/meetings.routes.js";
 import { sseRouter } from "./modules/sse/sse.router.js";
+import { authRouter } from "./modules/auth/auth.router.js";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -31,5 +32,7 @@ app.use("/contacts", contactRouter);
 app.use("/access", accessRouter);
 app.use("/meeting", meetingRoter);
 app.use("/sse", sseRouter);
+app.use("/auth", authRouter);
+
 //ошибки в конце
 app.use(errorMiddleware);
