@@ -44,7 +44,7 @@ export const registerService = async ({
   const existingUser = await findUserByEmail(email);
 
   if (existingUser) {
-    throw new ApiError(409, "User with this email already exists");
+    throw new ApiError(409, errorMessages.user_already_exists);
   }
 
   const password_hash = await hashPassword(password);
@@ -57,23 +57,5 @@ export const registerService = async ({
     role: UserRole.USER,
   });
 
-  const accessToken = createAccessToken({
-    userId: user.id,
-    role: user.role,
-  });
-
-  const refreshToken = createRefreshToken({
-    userId: user.id,
-  });
-
-  const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + 30);
-
-  await saveRefreshToken(user.id, refreshToken, expiresAt);
-
-  return {
-    user,
-    accessToken,
-    refreshToken,
-  };
+  return user;
 };

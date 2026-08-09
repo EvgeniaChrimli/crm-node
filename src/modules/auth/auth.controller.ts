@@ -1,5 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import { loginService, registerService } from "./auth.service.js";
+import { RegisterDto } from "./auth.types.js";
 
 export const loginController = async (req: Request, res: Response) => {
   const { email, password } = req.body;
@@ -15,7 +16,7 @@ export const registerController = async (
   next: NextFunction,
 ) => {
   try {
-    const result = await registerService(req.validated?.body as any);
+    const result = await registerService(req.validated?.body as RegisterDto);
 
     return res.status(201).json(result);
   } catch (error) {

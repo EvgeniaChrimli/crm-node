@@ -7,4 +7,7 @@ export const errorMessages = {
   not_found: "Not found",
   branch_not_exist: "Branch does not exist",
   invalid_email_or_password: "Invalid email or password",
+  authentication_required: "Authentication required",
+  admin_access_required: "Admin access required",
+  user_already_exists: "User with this email already exists",
 };

@@ -16,13 +16,9 @@ import { idSchema } from "../../shared/schemas/common-schemas.js";
 import { authMiddleware } from "../../middlewares/auth.middleware.js";
 
 export const userRouter = Router();
+userRouter.use(authMiddleware);
 
-userRouter.get(
-  "/",
-  authMiddleware,
-  validate(getUsersQuerySchema, "query"),
-  getUsersController,
-);
+userRouter.get("/", validate(getUsersQuerySchema, "query"), getUsersController);
 userRouter.post("/", validate(createUserSchema, "body"), createUserController);
 userRouter.get("/:id", validate(idSchema, "params"), getUserByIdController);
 userRouter.patch(

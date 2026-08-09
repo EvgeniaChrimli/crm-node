@@ -11,7 +11,8 @@
     "start": "node dist/server.js",
     "migrate:create": "node-pg-migrate create",
     "migrate:up": "node-pg-migrate up",
-    "migrate:down": "node-pg-migrate down"
+    "migrate:down": "node-pg-migrate down",
+    "create:admin": "tsx src/cli/create-admin.ts"
   },
   "keywords": [],
   "author": "",
