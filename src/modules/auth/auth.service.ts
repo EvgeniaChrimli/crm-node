@@ -1,10 +1,26 @@
 import { ApiError } from "../../errors/api.error.js";
 import { errorMessages } from "../../shared/constants/errors.js";
-import { createUser, findUserByEmail } from "../users/user.repository.js";
-import { saveRefreshToken } from "./auth.repository.js";
+import {
+  createUser,
+  findUserByEmail,
+  getUserById,
+} from "../users/user.repository.js";
+import {
+  deleteRefreshToken,
+  findRefreshToken,
+  saveRefreshToken,
+} from "./auth.repository.js";
 import { RegisterDto, UserRole } from "./auth.types.js";
-import { comparePassword, hashPassword } from "./model/lib/hash.js";
-import { createAccessToken, createRefreshToken } from "./model/lib/jwt.js";
+import {
+  comparePassword,
+  hashPassword,
+  hashRefreshToken,
+} from "./model/lib/hash.js";
+import {
+  createAccessToken,
+  createRefreshToken,
+  verifyRefreshToken,
+} from "./model/lib/jwt.js";
 
 export const loginService = async (email: string, password: string) => {
   const user = await findUserByEmail(email);
@@ -58,4 +74,73 @@ export const registerService = async ({
   });
 
   return user;
+};
+
+export const refreshService = async (refreshToken: string) => {
+  let payload;
+
+  try {
+    payload = verifyRefreshToken(refreshToken);
+  } catch {
+    throw new ApiError(401, errorMessages.invalid_token);
+  }
+
+  if (
+    typeof payload !== "object" ||
+    payload === null ||
+    !("userId" in payload)
+  ) {
+    throw new ApiError(401, errorMessages.invalid_token);
+  }
+
+  const tokenHash = hashRefreshToken(refreshToken);
+  const storedToken = await findRefreshToken(tokenHash);
+
+  if (!storedToken) {
+    throw new ApiError(401, errorMessages.refresh_token_not_found);
+  }
+
+  if (new Date(storedToken.expires_at) < new Date()) {
+    await deleteRefreshToken(tokenHash);
+
+    throw new ApiError(401, errorMessages.expired_refresh_token);
+  }
+
+  const user = await getUserById(Number(payload.userId));
+
+  if (!user) {
+    throw new ApiError(401, errorMessages.user_not_found);
+  }
+
+  // Rotation: старый refresh token больше не используем
+  await deleteRefreshToken(tokenHash);
+
+  const accessToken = createAccessToken({
+    userId: user.id,
+    role: user.role,
+  });
+
+  const newRefreshToken = createRefreshToken({
+    userId: user.id,
+  });
+
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + 30);
+
+  await saveRefreshToken(user.id, newRefreshToken, expiresAt);
+
+  return {
+    accessToken,
+    refreshToken: newRefreshToken,
+  };
+};
+
+export const logoutService = async (refreshToken?: string) => {
+  if (!refreshToken) {
+    return;
+  }
+
+  const tokenHash = hashRefreshToken(refreshToken);
+
+  await deleteRefreshToken(tokenHash);
 };
