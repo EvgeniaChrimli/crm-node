@@ -13,6 +13,7 @@ import {
 import { ApiError } from "../../errors/api.error.js";
 import { errorMessages } from "../../shared/constants/errors.js";
 import { getUserByIdService } from "../users/user.service.js";
+import { createSseTicket } from "../sse/sse-ticket.service.js";
 
 export const loginController = async (
   req: Request,
@@ -103,6 +104,24 @@ export const meController = async (
     }
 
     return res.status(200).json(user);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const createSseTicketController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) {
+      throw new ApiError(401, errorMessages.unauthorized);
+    }
+
+    const ticket = createSseTicket(req.user.userId, req.user.role);
+
+    return res.status(200).json({ ticket });
   } catch (error) {
     next(error);
   }

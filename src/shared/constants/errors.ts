@@ -16,4 +16,6 @@ export const errorMessages = {
   admin_access_required: "Admin access required",
   user_already_exists: "User with this email already exists",
   unauthorized: "Unauthorized",
+  sse_ticket_required: "sse ticket required",
+  invalid_sse_ticket: "invalid sse ticket",
 };

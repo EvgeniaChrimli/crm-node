@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  createSseTicketController,
   loginController,
   logoutController,
   meController,
@@ -24,3 +25,4 @@ authRouter.post(
 );
 authRouter.post("/logout", logoutController);
 authRouter.get("/me", authMiddleware, meController);
+authRouter.post("/sse-ticket", createSseTicketController);
