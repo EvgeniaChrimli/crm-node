@@ -12,6 +12,7 @@ import {
 } from "../../config/cookies.js";
 import { ApiError } from "../../errors/api.error.js";
 import { errorMessages } from "../../shared/constants/errors.js";
+import { getUserByIdService } from "../users/user.service.js";
 
 export const loginController = async (
   req: Request,
@@ -80,6 +81,28 @@ export const logoutController = async (
     res.clearCookie("refreshToken", clearRefreshTokenCookieOptions);
 
     return res.status(204).send();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const meController = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  try {
+    if (!req.user) {
+      throw new ApiError(401, errorMessages.unauthorized);
+    }
+
+    const user = await getUserByIdService(req.user.userId);
+
+    if (!user) {
+      throw new ApiError(404, errorMessages.user_not_found);
+    }
+
+    return res.status(200).json(user);
   } catch (error) {
     next(error);
   }

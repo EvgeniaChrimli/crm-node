@@ -2,6 +2,7 @@ import { Router } from "express";
 import {
   loginController,
   logoutController,
+  meController,
   refreshController,
   registerController,
 } from "./auth.controller.js";
@@ -22,3 +23,4 @@ authRouter.post(
   registerController,
 );
 authRouter.post("/logout", logoutController);
+authRouter.get("/me", authMiddleware, meController);

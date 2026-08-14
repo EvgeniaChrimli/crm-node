@@ -15,4 +15,5 @@ export const errorMessages = {
   authentication_required: "Authentication required",
   admin_access_required: "Admin access required",
   user_already_exists: "User with this email already exists",
+  unauthorized: "Unauthorized",
 };
